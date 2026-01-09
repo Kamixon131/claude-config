@@ -11,7 +11,7 @@
 
 ### Qu'est-ce que Claude Code ?
 
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) est l'outil CLI officiel d'Anthropic qui permet d'utiliser Claude directement dans votre terminal. Il peut lire et modifier des fichiers, exécuter des commandes, naviguer dans votre codebase, et bien plus encore.
+[Claude Code](https://code.claude.com/docs/en/overview) est l'outil CLI officiel d'Anthropic qui permet d'utiliser Claude directement dans votre terminal. Il peut lire et modifier des fichiers, exécuter des commandes, naviguer dans votre codebase, et bien plus encore.
 
 ### Pourquoi ce repository ?
 
@@ -201,7 +201,7 @@ Le but est de tendre facilement vers du **code de production**. La configuration
 
 ### Prerequis
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installe et configure
+- [Claude Code](https://code.claude.com/docs/en/overview) installe et configure
 - Un projet existant ou nouveau
 - (Optionnel) Pour les notifications audio : macOS avec `afplay`, ou equivalent Linux/Windows
 

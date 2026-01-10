@@ -17,7 +17,7 @@
 
 Ce repository fournit une **configuration avancée et extensible** pour Claude Code, comprenant :
 
-- **4 Agents spécialisés** pour l'exploration parallèle (code, base de données, documentation, web)
+- **6 Agents spécialisés** pour l'exploration parallèle et la revue de code (code, base de données, documentation, web, optimisation backend, revue frontend)
 - **7 Commandes de workflow** pour automatiser le cycle de développement complet
 - **Système de notifications audio** pour savoir quand Claude a terminé ou attend votre input
 - **Guidelines de développement** personnalisables pour votre stack technique
@@ -178,6 +178,8 @@ Le but est de tendre facilement vers du **code de production**. La configuration
   - [explore-db](#explore-db)
   - [explore-docs](#explore-docs)
   - [websearch](#websearch)
+  - [backend-code-optimizer](#backend-code-optimizer)
+  - [frontend-code-reviewer](#frontend-code-reviewer)
 - [Best Practices - Ma Methodologie](#best-practices---ma-methodologie)
 - [Commands](#commands)
   - [commits](#commits)
@@ -261,11 +263,13 @@ claude
 ```
 claude-config/
 ├── .claude/                    # Configuration Claude Code
-│   ├── agents/                 # 4 agents d'exploration specialises
+│   ├── agents/                 # 6 agents specialises
 │   │   ├── explore-codebase.md # Recherche dans le code source
 │   │   ├── explore-db.md       # Exploration base de donnees Supabase
 │   │   ├── explore-docs.md     # Documentation des librairies
-│   │   └── websearch.md        # Recherche web rapide
+│   │   ├── websearch.md        # Recherche web rapide
+│   │   ├── backend-code-optimizer.md # Optimisation code Go
+│   │   └── frontend-code-reviewer.md # Revue code React/TypeScript
 │   │
 │   ├── commands/               # 7 commandes de workflow
 │   │   ├── commits.md          # Git commit automatique (Conventional Commits)
@@ -741,6 +745,95 @@ const event = stripe.webhooks.constructEvent(
 - https://stripe.com/docs/webhooks/signatures
 - https://stripe.com/docs/webhooks/best-practices
 ```
+
+---
+
+### backend-code-optimizer
+
+**But :** Analyser et optimiser le code backend Go pour la qualité, les performances et l'adhérence à Clean Architecture.
+
+| Propriete | Valeur |
+|-----------|--------|
+| **Fichier** | `.claude/agents/backend-code-optimizer.md` |
+| **Modele** | Opus (plus capable) |
+| **Outils** | `Read`, `Grep`, `Glob` |
+| **Mode** | Read-only |
+
+#### Ce qu'il analyse
+
+- Duplication de code et logique redondante
+- Fonctions et variables inutilisées
+- Violations des principes Clean Architecture
+- Opportunités de parallélisation avec goroutines
+- Inefficacités de performance
+- Simplifications possibles (nesting profond, logique complexe)
+
+#### Ce qu'il produit
+
+```markdown
+## Analyse de qualité - Backend
+
+### Issues Critiques (à corriger immédiatement)
+- `backend/internal/services/user.go:45` - Violation Clean Architecture
+- `backend/internal/repositories/cache.go:78` - Fuite mémoire goroutine
+
+### Issues Importantes (devraient être corrigées)
+- `backend/cmd/main.go:12` - 5 paramètres hardcodés
+
+### Nice-to-have (optionnel)
+- `backend/internal/domain/user.go:23` - Simplification possible
+```
+
+#### Usage
+
+Cet agent est lancé automatiquement par la commande `/review` quand du code backend est modifié.
+
+---
+
+### frontend-code-reviewer
+
+**But :** Analyser et optimiser le code frontend React/TypeScript/Next.js pour la qualité et les performances.
+
+| Propriete | Valeur |
+|-----------|--------|
+| **Fichier** | `.claude/agents/frontend-code-reviewer.md` |
+| **Modele** | Opus |
+| **Outils** | `Read`, `Grep`, `Glob` |
+| **Mode** | Read-only |
+
+#### Ce qu'il analyse
+
+- Bonnes pratiques React (composition, hooks, rendu)
+- Sécurité TypeScript (any types, génériques, union discriminées)
+- Optimisation Next.js (server/client components, data fetching)
+- Performances (bundle size, lazy loading, code splitting)
+- Architecture CSS et accessibilité
+- Opportunités de simplification
+
+#### Ce qu'il produit
+
+```markdown
+## Analyse de qualité - Frontend
+
+### Issues Critiques
+- `frontend/src/pages/dashboard.tsx:12` - 3 useState qui devraient être un useReducer
+- `frontend/src/components/Form.tsx:45` - Prop drilling excessif
+
+### Issues Importantes
+- `frontend/src/hooks/useApi.ts:23` - Missing error boundary
+- `frontend/src/components/Card.tsx:78` - Type 'any' utilisé
+
+### Optimisations de performance
+- Bundle size: 245KB → 189KB (lazy loading des modales)
+- Unnecessary re-renders détectés dans ProductList
+
+### Simplifications recommandées
+- Lines 45-67 peuvent être condensées avec une custom hook
+```
+
+#### Usage
+
+Cet agent est lancé automatiquement par la commande `/review` quand du code frontend est modifié.
 
 ---
 

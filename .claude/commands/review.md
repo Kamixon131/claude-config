@@ -2,20 +2,20 @@
 name: review
 description: Universal code review - auto-detects scope from git changes, spec, commit, or brief
 arguments:
-  - name: mode
-    description: "Git mode: 'pushed' (last pushed commit) or 'local' (uncommitted changes). Default if no args."
+  - name: scope
+    description: "Force scope: 'frontend', 'backend', or 'all'. Auto-detected if omitted. FIRST ARGUMENT."
     required: false
   - name: spec
     description: "Path to spec/plan .md file describing the feature"
+    required: false
+  - name: mode
+    description: "Git mode: 'pushed' (last pushed commit) or 'local' (uncommitted changes). Default if no args."
     required: false
   - name: commit
     description: "Commit hash or range (e.g., 'abc123', 'HEAD', 'abc123..def456')"
     required: false
   - name: brief
     description: "Brief description of what to review"
-    required: false
-  - name: scope
-    description: "Force scope: 'frontend', 'backend', or 'all'. Auto-detected if omitted."
     required: false
 ---
 
@@ -146,13 +146,17 @@ After agents return, verify:
 2. Library docs needed? → explore-docs
 3. Database schema needed? → explore-db
 
+**→ NOW PROCEED TO SECTION 2.6 (MANDATORY)**
+
 ---
 
-## 2.6 DEEP ANALYSIS (PARALLEL)
+## 2.6 DEEP ANALYSIS (PARALLEL) - MANDATORY STEP
 
-**MANDATORY: Use Task tool with subagent_type. Do NOT analyze files directly.**
+**CRITICAL: You MUST execute this step after exploration. This is where the actual code review happens.**
 
-Launch specialized agents based on detected scope. Skip if no files for that domain.
+**Use Task tool with subagent_type. Do NOT read or analyze files yourself - the agents do this.**
+
+Launch specialized agents based on detected scope. Skip only if no files exist for that domain.
 
 ### Scope Detection Logic
 
@@ -185,18 +189,18 @@ Launch specialized agents based on detected scope. Skip if no files for that dom
 
 ---
 
-## 3. ANALYZE
+## 3. AGGREGATE RESULTS
 
-Read each changed file and produce analysis.
+**Aggregate and format the results from section 2.6 agents.** Do NOT re-analyze files yourself.
 
 ```markdown
 ## Code Review Analysis
 
-### Files Reviewed
+### Files Reviewed (from agent reports)
 - `path/to/file` - [purpose of changes]
 ```
 
-### Backend Analysis (if backend files present)
+### Backend Analysis (from `backend-code-optimizer` agent)
 
 ```markdown
 ### Backend Issues
@@ -220,7 +224,7 @@ Read each changed file and produce analysis.
 - [description]
 ```
 
-### Frontend Analysis (if frontend files present)
+### Frontend Analysis (from `frontend-code-reviewer` agent)
 
 ```markdown
 ### Frontend Issues

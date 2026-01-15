@@ -99,9 +99,9 @@ Produce analysis:
 
 ---
 
-## 5. PLAN
+## 5. SHOW FIX PLAN (MANDATORY CHECKPOINT)
 
-Create fix strategy:
+Create and display the complete fix strategy, then **STOP**. Do NOT proceed without user validation.
 
 ```markdown
 ## Fix Strategy
@@ -126,18 +126,22 @@ Create fix strategy:
 
 ---
 
-## 6. VALIDATE
+## 6. VALIDATE (BLOCKING)
 
-Ask with AskUserQuestion: "Proceed with fix?"
+**MANDATORY**: You MUST wait for user approval before ANY implementation.
+
+Ask with AskUserQuestion: "Validate this fix approach?"
 - "Apply fix"
 - "Investigate more"
 - "Modify approach"
+
+**DO NOT proceed to implementation without explicit user selection.**
 
 ---
 
 ## 7. IMPLEMENT
 
-After validation, implement:
+**ONLY after user selects "Apply fix"**, implement:
 1. Backend changes first
 2. Frontend changes second
 
@@ -186,5 +190,5 @@ Database verification: `mcp__supabase-dev__get_advisors` or `mcp__supabase-prod_
 - **CLARIFY FIRST** - fully understand the issue before exploring
 - **EXPLORE SECOND** - never assume, always investigate
 - **ROOT CAUSE** - fix the cause, not the symptom
-- **VALIDATE** - always ask before implementing
+- **VALIDATE IS BLOCKING** - NEVER implement without explicit user approval on the fix plan
 - **STAY IN SCOPE** - change only what's needed

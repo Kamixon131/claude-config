@@ -124,6 +124,34 @@ mcp__plugin_context7_context7__query-docs(libraryId="/gofiber/fiber", query="mid
 
 Pour toute création de composant UI significatif (pages, modals, forms, dashboards, cards), utilise le skill `frontend-design:frontend-design` pour garantir un design distinctif et production-ready.
 
+### 10. Workflow Modification - CRITICAL RULE
+
+**BEFORE editing any files, you MUST Read at least 3 files** that will help you to understand how to make a coherent and consistent codebase.
+
+**Types of files you MUST read:**
+
+1. **Similar files**: Read files that do similar functionality to understand patterns and conventions
+2. **Imported dependencies**: Read the definition/implementation of any imports you're not 100% sure how to use correctly - understand their API, types, and usage patterns
+
+**Steps to follow:**
+
+1. Read at least 3 relevant existing files (similar functionality + imported dependencies)
+2. Understand the patterns, conventions, and API usage
+3. Only then proceed with creating/editing files
+
+### 11. Frontend Styling Guidelines
+
+- **Mobile-first approach** with TailwindCSS
+- Use Shadcn/UI components from `src/components/ui/`
+- Custom components in `src/components/nowts/`
+
+#### Styling Preferences
+
+- Use the shared typography components in `@/components/nowts/typography.tsx` for paragraphs and headings (instead of creating custom `p`, `h1`, `h2`, etc.)
+- For spacing, prefer utility layouts like `flex flex-col gap-4` for vertical spacing and `flex gap-4` for horizontal spacing (instead of `space-y-4`)
+- Prefer the card or item or container (`@/components/ui/card.tsx`, `@/components/ui/item.tsx`) for styled wrappers rather than adding custom styles directly to `<div>` elements
+
+
 ---
 
 ## Core Architecture

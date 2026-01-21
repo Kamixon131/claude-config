@@ -1,10 +1,8 @@
 ---
 name: explore
 description: Deep codebase exploration to answer specific questions
-arguments:
-  - name: question
-    description: "The question to investigate"
-    required: true
+model: haiku
+argument-hint: <question>
 ---
 
 Read-only exploration task.
@@ -20,7 +18,7 @@ Ultra think before answering:
 
 ## 1. PARSE QUESTION
 
-Extract from `$ARGUMENTS.question`:
+Extract from `$ARGUMENTS`:
 - Key terms and concepts to search
 - Whether backend, frontend, or both
 - Whether external documentation is needed

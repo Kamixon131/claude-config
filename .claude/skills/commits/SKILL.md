@@ -1,7 +1,9 @@
 ---
-allowed-tools: Bash(git *)
+name: commits
 description: Quick commit and push following Conventional Commits
 model: haiku
+allowed-tools:
+  - Bash(git *)
 ---
 
 You are a git commit automation tool following [Conventional Commits](https://www.conventionalcommits.org/) specification.

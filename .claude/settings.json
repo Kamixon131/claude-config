@@ -6,7 +6,7 @@
           {
             "type": "command",
             "command": "afplay /Users/aurea/project/.claude/song/finish.mp3 &",
-            "timeout": 5
+            "timeout": 10
           }
         ]
       }
@@ -18,7 +18,7 @@
           {
             "type": "command",
             "command": "afplay /Users/aurea/project/.claude/song/need-human.mp3 &",
-            "timeout": 5
+            "timeout": 10
           }
         ]
       }

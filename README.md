@@ -1,6 +1,6 @@
 # Claude Code Config
 
-**A comprehensive configuration framework for Claude Code** - Transform Claude into an autonomous development assistant with specialized agents, workflow commands, and audio notifications.
+**A comprehensive configuration framework for Claude Code** - Transform Claude into an autonomous development assistant with specialized agents, workflow skills, and audio notifications.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Author](https://img.shields.io/badge/Author-@Aurealibe-blue.svg)](https://github.com/Aurealibe)
@@ -18,7 +18,7 @@
 This repository provides an **advanced and extensible configuration** for Claude Code, including:
 
 - **6 Specialized agents** for parallel exploration and code review (code, database, documentation, web, backend optimization, frontend review)
-- **7 Workflow commands** to automate the complete development cycle
+- **7 Workflow skills** to automate the complete development cycle
 - **Audio notification system** to know when Claude has finished or is waiting for your input
 - **Customizable development guidelines** for your tech stack
 - **Architecture patterns** transferable to any language/framework
@@ -30,7 +30,7 @@ This repository provides an **advanced and extensible configuration** for Claude
 | Claude explores sequentially | Parallel exploration with 4 specialized agents |
 | No structured workflow | Workflow: Explore → Plan → Validate → Implement → Verify |
 | You have to watch Claude | Audio notifications when Claude finishes or waits |
-| Ad-hoc approach | Standardized commands (`/commits`, `/review`, `/hotfix`, etc.) |
+| Ad-hoc approach | Standardized skills (`/commits`, `/review`, `/hotfix`, etc.) |
 | Claude may invent patterns | Guidelines force reuse of existing code |
 
 ---
@@ -110,18 +110,18 @@ You can use Claude Code with default plan mode, but my methodology is better bec
 |-------------------|------------------|
 | Internal agents not configurable | **Custom configurable agents** (add your own) |
 | Sequential exploration | **Parallel exploration** (docs + code + db simultaneously) |
-| Plans once at the beginning | Planning at EVERY command |
+| Plans once at the beginning | Planning at EVERY skill |
 | No intermediate validation | Mandatory user validation before each implementation |
 | Accumulating context | Fresh context at each phase |
 | Variable results | Consistent results |
 
 **The real value: parallel agents.**
 
-When you launch a command (`/dev`, `/hotfix`, `/explore`...), it automatically launches multiple agents in parallel:
+When you launch a skill (`/dev`, `/hotfix`, `/explore`...), it automatically launches multiple agents in parallel:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    YOUR COMMAND                              │
+│                    YOUR SKILL                                │
 │                                                              │
 │   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
 │   │ explore-    │  │ explore-db  │  │ explore-    │         │
@@ -181,7 +181,7 @@ The goal is to easily achieve **production-grade code**. The configuration is mi
   - [backend-code-optimizer](#backend-code-optimizer)
   - [frontend-code-reviewer](#frontend-code-reviewer)
 - [Best Practices - My Methodology](#best-practices---my-methodology)
-- [Commands](#commands)
+- [Skills](#skills)
   - [commits](#commits)
   - [dev](#dev)
   - [explore](#explore)
@@ -271,14 +271,25 @@ claude-config/
 │   │   ├── backend-code-optimizer.md # Go code optimization
 │   │   └── frontend-code-reviewer.md # React/TypeScript code review
 │   │
-│   ├── commands/               # 7 workflow commands
-│   │   ├── commits.md          # Automatic git commit (Conventional Commits)
-│   │   ├── dev.md              # Phase-based development
-│   │   ├── explore.md          # Deep investigation
-│   │   ├── hotfix.md           # Bug fixes
-│   │   ├── oneshot.md          # Quick implementation
-│   │   ├── plan-feature.md     # Complete feature planning
-│   │   └── review.md           # Automated code review
+│   ├── skills/                 # 7 workflow skills
+│   │   ├── commits/            # Automatic git commit (Conventional Commits)
+│   │   │   └── SKILL.md
+│   │   ├── dev/                # Phase-based development
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/
+│   │   ├── explore/            # Deep investigation
+│   │   │   └── SKILL.md
+│   │   ├── hotfix/             # Bug fixes
+│   │   │   └── SKILL.md
+│   │   ├── oneshot/            # Quick implementation
+│   │   │   └── SKILL.md
+│   │   ├── plan-feature/       # Complete feature planning
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/
+│   │   └── review/             # Automated code review
+│   │       ├── SKILL.md
+│   │       ├── checklists/
+│   │       └── templates/
 │   │
 │   ├── song/                   # Audio files for notifications
 │   │   ├── finish.mp3          # Plays when a task is completed
@@ -296,7 +307,7 @@ claude-config/
 | File/Folder | Role |
 |-------------|------|
 | `.claude/agents/` | Specialized agents launched in parallel to collect context quickly |
-| `.claude/commands/` | Commands invocable with `/name` that orchestrate complete workflows |
+| `.claude/skills/` | Skills invocable with `/name` that orchestrate complete workflows |
 | `.claude/song/` | Notification sounds for audio feedback |
 | `.claude/settings.json` | Hooks that trigger actions on certain events |
 | `CLAUDE.md` | Instructions that Claude reads at startup - defines your conventions and patterns |
@@ -480,7 +491,7 @@ func ValidateToken(ctx context.Context, token string) (*Claims, error) {
 
 #### Usage Example
 
-When the `/explore` or `/dev` command is launched, this agent is automatically invoked:
+When the `/explore` or `/dev` skill is launched, this agent is automatically invoked:
 
 ```
 Claude: "I'm launching explore-codebase to search for auth patterns..."
@@ -786,7 +797,7 @@ const event = stripe.webhooks.constructEvent(
 
 #### Usage
 
-This agent is automatically launched by the `/review` command when backend code is modified.
+This agent is automatically launched by the `/review` skill when backend code is modified.
 
 ---
 
@@ -833,15 +844,15 @@ This agent is automatically launched by the `/review` command when backend code 
 
 #### Usage
 
-This agent is automatically launched by the `/review` command when frontend code is modified.
+This agent is automatically launched by the `/review` skill when frontend code is modified.
 
 ---
 
-## Commands
+## Skills
 
-Commands are **complete workflows** invocable with `/name`. They orchestrate agents and follow a structured cycle.
+Skills are **complete workflows** invocable with `/name`. They orchestrate agents and follow a structured cycle.
 
-### Cycle Common to All Commands
+### Cycle Common to All Skills
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -861,13 +872,13 @@ Commands are **complete workflows** invocable with `/name`. They orchestrate age
 
 ### commits
 
-**Command:** `/commits`
+**Skill:** `/commits`
 
 **Purpose:** Automatic commit and push following Conventional Commits.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/commits.md` |
+| **File** | `.claude/skills/commits/SKILL.md` |
 | **Model** | Haiku |
 | **Allowed tools** | Bash (git only) |
 
@@ -936,13 +947,13 @@ feat!: Change API response format  # Breaking change
 
 ### dev
 
-**Command:** `/dev spec="..." phase="..."`
+**Skill:** `/dev spec="..." phase="..."`
 
 **Purpose:** Execute a development phase from a spec file.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/dev.md` |
+| **File** | `.claude/skills/dev/SKILL.md` |
 | **Arguments** | `spec` (required), `phase` (required), `done` (optional) |
 
 #### Arguments
@@ -989,13 +1000,13 @@ Types → API → Hooks → Components → Pages
 
 ### explore
 
-**Command:** `/explore question="..."`
+**Skill:** `/explore question="..."`
 
 **Purpose:** Deep read-only investigation to answer a question.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/explore.md` |
+| **File** | `.claude/skills/explore/SKILL.md` |
 | **Arguments** | `question` (required) |
 
 #### Workflow
@@ -1052,13 +1063,13 @@ The agent reflects on completeness between each major step:
 
 ### hotfix
 
-**Command:** `/hotfix issue="..."`
+**Skill:** `/hotfix issue="..."`
 
 **Purpose:** Fix bugs or modify existing features.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/hotfix.md` |
+| **File** | `.claude/skills/hotfix/SKILL.md` |
 | **Model** | Opus (more capable) |
 | **Arguments** | `issue` (required) |
 
@@ -1111,13 +1122,13 @@ Add grace period check before rejection.
 
 ### oneshot
 
-**Command:** `/oneshot task="..."`
+**Skill:** `/oneshot task="..."`
 
 **Purpose:** Quick implementation without a full spec file.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/oneshot.md` |
+| **File** | `.claude/skills/oneshot/SKILL.md` |
 | **Arguments** | `task` (required) |
 
 #### When to Use
@@ -1150,13 +1161,13 @@ Add grace period check before rejection.
 
 ### plan-feature
 
-**Command:** `/plan-feature name="..."`
+**Skill:** `/plan-feature name="..."`
 
 **Purpose:** Create a complete development plan for a new feature.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/plan-feature.md` |
+| **File** | `.claude/skills/plan-feature/SKILL.md` |
 | **Arguments** | `name` (required) |
 | **Output** | `{NAME}_FEATURE.md` at root |
 
@@ -1248,7 +1259,7 @@ Phase 2b: ValidateEmail, SendWelcome (Business logic)
 
 #### Customization
 
-These limits are **configurable**. You can modify `.claude/commands/plan-feature.md` to:
+These limits are **configurable**. You can modify `.claude/skills/plan-feature/SKILL.md` to:
 - Increase/decrease max per phase
 - Change layer order
 - Add custom phases
@@ -1267,13 +1278,13 @@ These limits are **configurable**. You can modify `.claude/commands/plan-feature
 
 ### review
 
-**Command:** `/review [options]`
+**Skill:** `/review [options]`
 
 **Purpose:** Automated code review with scope detection.
 
 | Property | Value |
 |----------|-------|
-| **File** | `.claude/commands/review.md` |
+| **File** | `.claude/skills/review/SKILL.md` |
 | **Arguments** | All optional (see below) |
 
 #### Arguments
@@ -1288,7 +1299,7 @@ These limits are **configurable**. You can modify `.claude/commands/plan-feature
 
 #### Automatic Scope Detection
 
-The command automatically analyzes changed files:
+The skill automatically analyzes changed files:
 
 ```
 backend/**/*.go → Backend review
@@ -1518,7 +1529,7 @@ This framework is **language and framework agnostic**. The patterns are universa
 
 ### Basic Principle
 
-Agents and commands work with **any stack** because they:
+Agents and skills work with **any stack** because they:
 
 1. **Explore** your existing code (no assumption about structure)
 2. **Search for patterns** in your project
@@ -1649,7 +1660,7 @@ This avoids duplication and maintains consistency.
 
 ### Explore → Plan → Validate → Implement → Verify
 
-Each command follows this cycle:
+Each skill follows this cycle:
 
 ```
 EXPLORE    → Collect context (agents in parallel)
@@ -1739,14 +1750,14 @@ Verify that:
 2. The `.md` files have the correct YAML frontmatter format
 3. You are in the correct project directory
 
-### Commands Don't Work
+### Skills Don't Work
 
 ```bash
 # Check structure
-ls -la .claude/commands/
+ls -la .claude/skills/
 
-# Files must have .md extension
-# and correct YAML frontmatter format
+# Each skill must have a SKILL.md file
+# with correct YAML frontmatter format
 ```
 
 ### Context7 Can't Find My Library
@@ -1788,7 +1799,7 @@ Contributions are welcome!
 ### Contribution Ideas
 
 - New specialized agents
-- New workflow commands
+- New workflow skills
 - Support for other databases
 - Translations
 - Documentation improvements

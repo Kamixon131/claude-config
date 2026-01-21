@@ -1,16 +1,18 @@
 ---
 name: dev
 description: Develop phase with exploration and plan validation
-arguments:
-  - name: spec
-    description: "Path to spec .md file"
-    required: true
-  - name: phase
-    description: "Phase number (e.g., '2' or '2-3' for multiple)"
-    required: true
-  - name: done
-    description: "Phases completed (e.g., '0-1')"
-    required: false
+model: opus
+argument-hint: spec=<path> phase=<number> [done=<phases>]
+hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: command
+          command: |
+            if [[ -d "backend" ]]; then
+              cd backend && go build ./... 2>&1 | head -10 || true
+            fi
+          once: true
 ---
 
 Follow CLAUDE.md rules.
@@ -53,9 +55,9 @@ Add explore-docs for any external libraries mentioned.
 ## 2.5 POST-EXPLORATION CHECK
 
 After agents return, verify completeness:
-1. Database info needed but missing? → launch explore-db
-2. Library docs needed but missing? → launch explore-docs
-3. Similar patterns not found? → additional explore-codebase
+1. Database info needed but missing? -> launch explore-db
+2. Library docs needed but missing? -> launch explore-docs
+3. Similar patterns not found? -> additional explore-codebase
 
 ---
 
@@ -76,8 +78,8 @@ Display enriched plan:
 - [existing code patterns found]
 
 ### Order
-Backend: Domain → Application → Infrastructure → Presentation
-Frontend: Types → API → Hooks → Components → Pages
+Backend: Domain -> Application -> Infrastructure -> Presentation
+Frontend: Types -> API -> Hooks -> Components -> Pages
 ```
 
 ---
@@ -94,12 +96,12 @@ Ask with AskUserQuestion: "Proceed with implementation?"
 
 After validation, implement in appropriate order:
 
-**Backend:** Domain → Application → Infrastructure → Presentation
+**Backend:** Domain -> Application -> Infrastructure -> Presentation
 - context.Context as first parameter for I/O
 - Follow Clean Architecture patterns
 - Complete error handling
 
-**Frontend:** Types → API → Hooks → Components → Pages
+**Frontend:** Types -> API -> Hooks -> Components -> Pages
 - next-intl for ALL user-facing text
 - Shadcn UI for standard components
 - Strict TypeScript (no `any`)

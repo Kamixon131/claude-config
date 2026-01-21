@@ -1,22 +1,17 @@
 ---
 name: review
 description: Universal code review - auto-detects scope from git changes, spec, commit, or brief
-arguments:
-  - name: scope
-    description: "Force scope: 'frontend', 'backend', or 'all'. Auto-detected if omitted. FIRST ARGUMENT."
-    required: false
-  - name: spec
-    description: "Path to spec/plan .md file describing the feature"
-    required: false
-  - name: mode
-    description: "Git mode: 'pushed' (last pushed commit) or 'local' (uncommitted changes). Default if no args."
-    required: false
-  - name: commit
-    description: "Commit hash or range (e.g., 'abc123', 'HEAD', 'abc123..def456')"
-    required: false
-  - name: brief
-    description: "Brief description of what to review"
-    required: false
+argument-hint: "[scope=frontend|backend|all] [feature=name] [spec=path] [mode=pushed|local] [commit=hash]"
+hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: command
+          command: |
+            if [[ -d "backend" ]]; then
+              cd backend && go build ./... 2>&1 | head -10 || true
+            fi
+          once: true
 ---
 
 Think carefully for code review. Follow CLAUDE.md rules.
@@ -46,10 +41,11 @@ Use Task tool with these subagent_type values:
 
 ### File Source Priority (use first available):
 
-1. `$ARGUMENTS.commit` → `git show --name-only $ARGUMENTS.commit`
-2. `$ARGUMENTS.mode` → Git diff (pushed or local)
-3. `$ARGUMENTS.spec` alone → Extract files from spec
-4. **Default**: `mode=local` (uncommitted changes)
+1. `$ARGUMENTS.feature` -> Search codebase for feature-related files
+2. `$ARGUMENTS.commit` -> `git show --name-only $ARGUMENTS.commit`
+3. `$ARGUMENTS.mode` -> Git diff (pushed or local)
+4. `$ARGUMENTS.spec` alone -> Extract files from spec
+5. **Default**: `mode=local` (uncommitted changes)
 
 ### If mode = "pushed" (or default when no args and clean working tree)
 
@@ -73,11 +69,6 @@ git diff HEAD
 - **Spec alone**: Extract all referenced files from spec as review targets
 - **Spec + other source**: Use spec as context only, files come from other source
 
-Store spec context for use in:
-- Section 2.6 DEEP ANALYSIS (pass to agents)
-- Section 3 ANALYZE (validate against requirements)
-- Section 5 PROPOSE FIXES (align with spec intent)
-
 ### If commit provided
 
 ```bash
@@ -85,10 +76,13 @@ git show --name-only $ARGUMENTS.commit
 git show $ARGUMENTS.commit
 ```
 
-### If brief provided
+### If feature provided
 
-- Use brief as search context
-- Find related files via explore-codebase
+**This is a feature-based review, independent of git changes.**
+
+1. Use `Task(subagent_type="explore-codebase")` to find all files related to the feature
+2. Apply scope filter if provided (backend -> `backend/**/*.go`, frontend -> `frontend/src/**/*.{ts,tsx}`)
+3. Collect the file list from agent response -> these become the review targets
 
 ### Auto-Categorize Files
 
@@ -105,7 +99,8 @@ git show $ARGUMENTS.commit
 ```markdown
 ## Review Scope
 
-**Source**: [mode/spec/commit/brief]
+**Source**: [feature/mode/spec/commit]
+**Feature**: [feature name if provided, otherwise "N/A"]
 **Spec Context**: [spec file path if provided, otherwise "None"]
 **Commit**: [hash if applicable]
 **Detected Scope**: [backend/frontend/both]
@@ -142,11 +137,11 @@ Launch agents in a single message (parallel execution):
 ## 2.5 POST-EXPLORATION CHECK
 
 After agents return, verify:
-1. Context complete? If not → additional explore-codebase
-2. Library docs needed? → explore-docs
-3. Database schema needed? → explore-db
+1. Context complete? If not -> additional explore-codebase
+2. Library docs needed? -> explore-docs
+3. Database schema needed? -> explore-db
 
-**→ NOW PROCEED TO SECTION 2.6 (MANDATORY)**
+**-> NOW PROCEED TO SECTION 2.6 (MANDATORY)**
 
 ---
 
@@ -160,10 +155,8 @@ Launch specialized agents based on detected scope. Skip only if no files exist f
 
 ### Scope Detection Logic
 
-1. If `$ARGUMENTS.scope` is set → use only that scope
-2. Else auto-detect from file patterns:
-   - `backend/**/*.go` files present → include backend
-   - `frontend/src/**/*.{ts,tsx}` files present → include frontend
+1. If `$ARGUMENTS.scope` is set -> use only that scope
+2. Else auto-detect from file patterns
 
 ### Agent Dispatch (single message, parallel if both scopes)
 
@@ -176,15 +169,15 @@ Launch specialized agents based on detected scope. Skip only if no files exist f
 
 ### Skip Conditions
 
-- If `scope=frontend` → skip `backend-code-optimizer` entirely
-- If `scope=backend` → skip `frontend-code-reviewer` entirely
-- If no frontend files changed → skip `frontend-code-reviewer`
-- If no backend files changed → skip `backend-code-optimizer`
-- If no files changed at all → report "No files to review" and stop
+- If `scope=frontend` -> skip `backend-code-optimizer` entirely
+- If `scope=backend` -> skip `frontend-code-reviewer` entirely
+- If no frontend files changed -> skip `frontend-code-reviewer`
+- If no backend files changed -> skip `backend-code-optimizer`
+- If no files changed at all -> report "No files to review" and stop
 
 **Agent outputs to integrate:**
-- Quality scores → merge into section 4
-- Issues categorized as Critical/Important/Nice-to-have → merge into section 5
+- Quality scores -> merge into section 4
+- Issues categorized as Critical/Important/Nice-to-have -> merge into section 5
 - Optimization recommendations
 
 ---
@@ -193,73 +186,13 @@ Launch specialized agents based on detected scope. Skip only if no files exist f
 
 **Aggregate and format the results from section 2.6 agents.** Do NOT re-analyze files yourself.
 
+Use the analysis format from [checklists/backend-checklist.md](checklists/backend-checklist.md) and [checklists/frontend-checklist.md](checklists/frontend-checklist.md).
+
 ```markdown
 ## Code Review Analysis
 
 ### Files Reviewed (from agent reports)
 - `path/to/file` - [purpose of changes]
-```
-
-### Backend Analysis (from `backend-code-optimizer` agent)
-
-```markdown
-### Backend Issues
-
-#### Duplications Found
-- [description] in files X and Y
-
-#### Clean Architecture Violations
-- [description] - should follow pattern from [existing file]
-
-#### Unused Code
-- `function_name` in `file.go` - never called
-
-#### Context Propagation Issues
-- Missing context.Context in [function]
-
-#### Error Handling Issues
-- [description]
-
-#### Performance Issues
-- [description]
-```
-
-### Frontend Analysis (from `frontend-code-reviewer` agent)
-
-```markdown
-### Frontend Issues
-
-#### Duplications Found
-- [description] in components X and Y
-
-#### Pattern Violations
-- [description] - should follow pattern from [existing component]
-
-#### Unused Code
-- `ComponentName` in `file.tsx` - never used
-
-#### TypeScript Issues
-- `any` type used in [file]
-- Missing types for [props/state]
-
-#### i18n Issues
-- Hardcoded string "[text]" in [component] - use next-intl
-
-#### Accessibility Issues
-- Missing aria-label in [component]
-- Missing keyboard navigation in [component]
-
-#### Performance Issues
-- Missing memoization in [component]
-- Unnecessary re-renders in [component]
-- Missing Suspense boundaries
-```
-
-### Positive Observations
-
-```markdown
-### Positive Observations
-- [what was done well]
 ```
 
 ---
@@ -268,32 +201,7 @@ Launch specialized agents based on detected scope. Skip only if no files exist f
 
 Aggregate scores from specialized agents (section 2.6). Skip domains with no agent output.
 
-### Backend Score (from `backend-code-optimizer`)
-
-```markdown
-## Backend Quality Score: X/100
-
-| Criterion | Score | Notes |
-|-----------|-------|-------|
-| Code cleanliness | X/25 | [notes] |
-| Clean Architecture | X/25 | [notes] |
-| Error handling | X/25 | [notes] |
-| Performance | X/25 | [notes] |
-```
-
-### Frontend Score (from `frontend-code-reviewer`)
-
-```markdown
-## Frontend Quality Score: X/100
-
-| Criterion | Score | Notes |
-|-----------|-------|-------|
-| Code correctness | X/20 | [notes] |
-| TypeScript usage | X/20 | [notes] |
-| Performance | X/20 | [notes] |
-| i18n compliance | X/20 | [notes] |
-| Best practices | X/20 | [notes] |
-```
+Use scoring criteria from checklists.
 
 ### Global Score
 
@@ -302,7 +210,7 @@ Weighted average based on file count per domain.
 ```markdown
 ## Global Quality Score: X/100
 
-Formula: (Backend Score × backend_files + Frontend Score × frontend_files) / total_files
+Formula: (Backend Score x backend_files + Frontend Score x frontend_files) / total_files
 
 [1-2 sentence overall assessment]
 ```
@@ -385,32 +293,7 @@ Database (if schema changes): `mcp__supabase-dev__get_advisors`
 
 ## 9. SUMMARY
 
-```markdown
-## Review Complete
-
-### Source: [mode/spec/commit/brief]
-### Scope: [backend/frontend/both]
-
-### Files Reviewed
-- [count] backend files
-- [count] frontend files
-
-### Issues Found
-- [count] Critical
-- [count] Important
-- [count] Minor
-
-### Fixes Applied
-- [list or "None requested"]
-
-### Final Scores
-- Backend: X/100
-- Frontend: X/100
-- Global: X/100
-
-### Recommendations
-- [follow-up actions]
-```
+Use the summary format from [templates/review-report.md](templates/review-report.md).
 
 ---
 

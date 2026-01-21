@@ -2,10 +2,17 @@
 name: hotfix
 description: Fix bugs or modify existing features with deep exploration
 model: opus
-arguments:
-  - name: issue
-    description: "Description of the bug or modification needed"
-    required: true
+argument-hint: <issue description>
+hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: command
+          command: |
+            if [[ -d "backend" ]]; then
+              cd backend && go build ./... 2>&1 | head -10 || true
+            fi
+          once: true
 ---
 
 Follow CLAUDE.md rules for Clean Architecture.
@@ -22,7 +29,7 @@ Ultra think before each phase transition:
 
 ## 1. PARSE ISSUE
 
-From: `$ARGUMENTS.issue`
+From: `$ARGUMENTS`
 
 Extract:
 - **Feature area**: Which part of the app?

@@ -1,15 +1,13 @@
 ---
 name: plan-feature
 description: Create complete development plan with parallel exploration
-arguments:
-  - name: name
-    description: "Short name for the feature (e.g., 'prospect-kanban')"
-    required: true
+model: opus
+argument-hint: name=<feature-name>
 ---
 
 Follow CLAUDE.md rules.
 
-**Output file:** `{$ARGUMENTS.name}_FEATURE.md` (uppercase, root directory)
+**Output file:** `docs/plan-features/{$ARGUMENTS.name}_FEATURE.md` (uppercase)
 
 ## Ultra Think Strategy
 
@@ -111,18 +109,21 @@ Ask with AskUserQuestion: "Validate this architecture?"
 
 ## 4. WRITE SPEC FILE
 
-After validation, write complete spec to `{$ARGUMENTS.name}_FEATURE.md`:
+After validation, write complete spec to `docs/plan-features/{$ARGUMENTS.name}_FEATURE.md`.
+
+Use the template structure from [templates/feature-spec-template.md](templates/feature-spec-template.md).
 
 Structure:
 1. Overview (objective, summary, tech stack)
 2. Context and Motivation
 3. Functional Specifications (detailed behavior, rules, edge cases)
 4. Technical Architecture (existing files to modify, new files to create)
-5. Database (migrations, columns, RLS policies)
-6. Backend Implementation (phases: Domain -> Infrastructure -> Application -> Presentation)
-7. Frontend Implementation (phases: Types/API -> Hooks -> Components -> Pages)
-8. Execution Plan (checkboxes for each task)
-9. Important Notes (compatibility, performance, security)
+5. Configuration (`app.yaml` for thresholds, limits, feature flags - NO hardcoded values)
+6. Database (migrations, columns, RLS policies)
+7. Backend Implementation (phases: Domain -> Infrastructure -> Application -> Presentation)
+8. Frontend Implementation (phases: Types/API -> Hooks -> Components -> Pages)
+9. Execution Plan (checkboxes for each task)
+10. Important Notes (compatibility, performance, security)
 
 ### Backend Phase Rules
 - Order: Domain -> Infrastructure -> Application -> Presentation
@@ -137,8 +138,8 @@ Structure:
 - Confirm file created
 - Summarize the phases
 - Indicate next steps:
-  - `/dev-backend spec=[name]_FEATURE.md phase=1`
-  - `/dev-frontend spec=[name]_FEATURE.md phase=8`
+  - `/dev spec=docs/plan-features/[name]_FEATURE.md phase=1`
+  - `/dev spec=docs/plan-features/[name]_FEATURE.md phase=8`
 
 ---
 

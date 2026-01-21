@@ -1,10 +1,18 @@
 ---
 name: oneshot
 description: Quick implementation without a full spec file
-arguments:
-  - name: task
-    description: "What to implement"
-    required: true
+model: opus
+argument-hint: <task description>
+hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: command
+          command: |
+            if [[ -d "backend" ]]; then
+              cd backend && go build ./... 2>&1 | head -10 || true
+            fi
+          once: true
 ---
 
 Follow CLAUDE.md rules.

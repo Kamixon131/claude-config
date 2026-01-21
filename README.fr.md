@@ -1,6 +1,6 @@
 # Claude Code Config
 
-**Un framework de configuration complet pour Claude Code** - Transformez Claude en un assistant de développement autonome avec des agents spécialisés, des commandes de workflow et des notifications audio.
+**Un framework de configuration complet pour Claude Code** - Transformez Claude en un assistant de développement autonome avec des agents spécialisés, des skills de workflow et des notifications audio.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Author](https://img.shields.io/badge/Author-@Aurealibe-blue.svg)](https://github.com/Aurealibe)
@@ -18,7 +18,7 @@
 Ce repository fournit une **configuration avancée et extensible** pour Claude Code, comprenant :
 
 - **6 Agents spécialisés** pour l'exploration parallèle et la revue de code (code, base de données, documentation, web, optimisation backend, revue frontend)
-- **7 Commandes de workflow** pour automatiser le cycle de développement complet
+- **7 Skills de workflow** pour automatiser le cycle de développement complet
 - **Système de notifications audio** pour savoir quand Claude a terminé ou attend votre input
 - **Guidelines de développement** personnalisables pour votre stack technique
 - **Patterns d'architecture** transférables à n'importe quel langage/framework
@@ -30,7 +30,7 @@ Ce repository fournit une **configuration avancée et extensible** pour Claude C
 | Claude explore séquentiellement | Exploration parallèle avec 4 agents spécialisés |
 | Pas de workflow structuré | Workflow Explore → Plan → Validate → Implement → Verify |
 | Vous devez surveiller Claude | Notifications audio quand Claude termine ou attend |
-| Approche ad-hoc | Commandes standardisées (`/commits`, `/review`, `/hotfix`, etc.) |
+| Approche ad-hoc | Skills standardisés (`/commits`, `/review`, `/hotfix`, etc.) |
 | Claude peut inventer des patterns | Guidelines forcent la réutilisation du code existant |
 
 ---
@@ -110,18 +110,18 @@ Vous pouvez utiliser Claude Code avec le mode plan par defaut, mais ma methodolo
 |---------------------|-------------------|
 | Agents internes non configurables | **Agents custom configurables** (ajoutez les votres) |
 | Exploration sequentielle | **Exploration parallele** (docs + code + db en meme temps) |
-| Plan une seule fois au debut | Planification a CHAQUE commande |
+| Plan une seule fois au debut | Planification a CHAQUE skill |
 | Pas de validation intermediaire | Validation utilisateur obligatoire avant chaque implementation |
 | Contexte qui s'accumule | Contexte frais a chaque phase |
 | Resultats variables | Resultats consistants |
 
 **La vraie plus-value : les agents en parallele.**
 
-Quand vous lancez une commande (`/dev`, `/hotfix`, `/explore`...), elle lance automatiquement plusieurs agents en parallele :
+Quand vous lancez un skill (`/dev`, `/hotfix`, `/explore`...), il lance automatiquement plusieurs agents en parallele :
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    VOTRE COMMANDE                           │
+│                    VOTRE SKILL                              │
 │                                                             │
 │   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
 │   │ explore-    │  │ explore-db  │  │ explore-    │        │
@@ -181,7 +181,7 @@ Le but est de tendre facilement vers du **code de production**. La configuration
   - [backend-code-optimizer](#backend-code-optimizer)
   - [frontend-code-reviewer](#frontend-code-reviewer)
 - [Best Practices - Ma Methodologie](#best-practices---ma-methodologie)
-- [Commands](#commands)
+- [Skills](#skills)
   - [commits](#commits)
   - [dev](#dev)
   - [explore](#explore)
@@ -271,14 +271,25 @@ claude-config/
 │   │   ├── backend-code-optimizer.md # Optimisation code Go
 │   │   └── frontend-code-reviewer.md # Revue code React/TypeScript
 │   │
-│   ├── commands/               # 7 commandes de workflow
-│   │   ├── commits.md          # Git commit automatique (Conventional Commits)
-│   │   ├── dev.md              # Developpement par phases
-│   │   ├── explore.md          # Investigation profonde
-│   │   ├── hotfix.md           # Correction de bugs
-│   │   ├── oneshot.md          # Implementation rapide
-│   │   ├── plan-feature.md     # Planification de feature complete
-│   │   └── review.md           # Revue de code automatisee
+│   ├── skills/                 # 7 skills de workflow
+│   │   ├── commits/            # Git commit automatique (Conventional Commits)
+│   │   │   └── SKILL.md
+│   │   ├── dev/                # Developpement par phases
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/
+│   │   ├── explore/            # Investigation profonde
+│   │   │   └── SKILL.md
+│   │   ├── hotfix/             # Correction de bugs
+│   │   │   └── SKILL.md
+│   │   ├── oneshot/            # Implementation rapide
+│   │   │   └── SKILL.md
+│   │   ├── plan-feature/       # Planification de feature complete
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/
+│   │   └── review/             # Revue de code automatisee
+│   │       ├── SKILL.md
+│   │       ├── checklists/
+│   │       └── templates/
 │   │
 │   ├── song/                   # Fichiers audio pour notifications
 │   │   ├── finish.mp3          # Joue quand une tache est terminee
@@ -296,7 +307,7 @@ claude-config/
 | Fichier/Dossier | Role |
 |-----------------|------|
 | `.claude/agents/` | Agents specialises lances en parallele pour collecter du contexte rapidement |
-| `.claude/commands/` | Commandes invocables avec `/nom` qui orchestrent des workflows complets |
+| `.claude/skills/` | Skills invocables avec `/nom` qui orchestrent des workflows complets |
 | `.claude/song/` | Sons de notification pour feedback audio |
 | `.claude/settings.json` | Hooks qui declenchent des actions sur certains evenements |
 | `CLAUDE.md` | Instructions que Claude lit au demarrage - definit vos conventions et patterns |
@@ -480,7 +491,7 @@ func ValidateToken(ctx context.Context, token string) (*Claims, error) {
 
 #### Exemple d'utilisation
 
-Quand la commande `/explore` ou `/dev` est lancee, cet agent est automatiquement invoque :
+Quand le skill `/explore` ou `/dev` est lance, cet agent est automatiquement invoque :
 
 ```
 Claude: "Je lance explore-codebase pour chercher les patterns d'auth..."
@@ -786,7 +797,7 @@ const event = stripe.webhooks.constructEvent(
 
 #### Usage
 
-Cet agent est lancé automatiquement par la commande `/review` quand du code backend est modifié.
+Cet agent est lance automatiquement par le skill `/review` quand du code backend est modifie.
 
 ---
 
@@ -833,15 +844,15 @@ Cet agent est lancé automatiquement par la commande `/review` quand du code bac
 
 #### Usage
 
-Cet agent est lancé automatiquement par la commande `/review` quand du code frontend est modifié.
+Cet agent est lance automatiquement par le skill `/review` quand du code frontend est modifie.
 
 ---
 
-## Commands
+## Skills
 
-Les commandes sont des **workflows complets** invocables avec `/nom`. Elles orchestrent les agents et suivent un cycle structure.
+Les skills sont des **workflows complets** invocables avec `/nom`. Ils orchestrent les agents et suivent un cycle structure.
 
-### Cycle commun a toutes les commandes
+### Cycle commun a tous les skills
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -861,13 +872,13 @@ Les commandes sont des **workflows complets** invocables avec `/nom`. Elles orch
 
 ### commits
 
-**Commande :** `/commits`
+**Skill :** `/commits`
 
 **But :** Commit et push automatique en suivant Conventional Commits.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/commits.md` |
+| **Fichier** | `.claude/skills/commits/SKILL.md` |
 | **Modele** | Haiku |
 | **Outils autorises** | Bash (git uniquement) |
 
@@ -936,13 +947,13 @@ feat!: Change API response format  # Breaking change
 
 ### dev
 
-**Commande :** `/dev spec="..." phase="..."`
+**Skill :** `/dev spec="..." phase="..."`
 
 **But :** Executer une phase de developpement depuis un fichier de spec.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/dev.md` |
+| **Fichier** | `.claude/skills/dev/SKILL.md` |
 | **Arguments** | `spec` (requis), `phase` (requis), `done` (optionnel) |
 
 #### Arguments
@@ -989,13 +1000,13 @@ Types → API → Hooks → Components → Pages
 
 ### explore
 
-**Commande :** `/explore question="..."`
+**Skill :** `/explore question="..."`
 
 **But :** Investigation profonde read-only pour repondre a une question.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/explore.md` |
+| **Fichier** | `.claude/skills/explore/SKILL.md` |
 | **Arguments** | `question` (requis) |
 
 #### Workflow
@@ -1052,13 +1063,13 @@ L'agent reflechit a la completude entre chaque etape majeure :
 
 ### hotfix
 
-**Commande :** `/hotfix issue="..."`
+**Skill :** `/hotfix issue="..."`
 
 **But :** Corriger des bugs ou modifier des features existantes.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/hotfix.md` |
+| **Fichier** | `.claude/skills/hotfix/SKILL.md` |
 | **Modele** | Opus (plus capable) |
 | **Arguments** | `issue` (requis) |
 
@@ -1111,13 +1122,13 @@ Ajouter verification du grace period avant rejection.
 
 ### oneshot
 
-**Commande :** `/oneshot task="..."`
+**Skill :** `/oneshot task="..."`
 
 **But :** Implementation rapide sans fichier de spec complet.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/oneshot.md` |
+| **Fichier** | `.claude/skills/oneshot/SKILL.md` |
 | **Arguments** | `task` (requis) |
 
 #### Quand l'utiliser
@@ -1150,13 +1161,13 @@ Ajouter verification du grace period avant rejection.
 
 ### plan-feature
 
-**Commande :** `/plan-feature name="..."`
+**Skill :** `/plan-feature name="..."`
 
 **But :** Creer un plan de developpement complet pour une nouvelle feature.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/plan-feature.md` |
+| **Fichier** | `.claude/skills/plan-feature/SKILL.md` |
 | **Arguments** | `name` (requis) |
 | **Output** | `{NAME}_FEATURE.md` a la racine |
 
@@ -1248,7 +1259,7 @@ Phase 2b: ValidateEmail, SendWelcome (Business logic)
 
 #### Personnalisation
 
-Ces limites sont **configurables**. Vous pouvez modifier `.claude/commands/plan-feature.md` pour :
+Ces limites sont **configurables**. Vous pouvez modifier `.claude/skills/plan-feature/SKILL.md` pour :
 - Augmenter/diminuer le max par phase
 - Changer l'ordre des layers
 - Ajouter des phases custom
@@ -1267,13 +1278,13 @@ Ces limites sont **configurables**. Vous pouvez modifier `.claude/commands/plan-
 
 ### review
 
-**Commande :** `/review [options]`
+**Skill :** `/review [options]`
 
 **But :** Revue de code automatisee avec detection de scope.
 
 | Propriete | Valeur |
 |-----------|--------|
-| **Fichier** | `.claude/commands/review.md` |
+| **Fichier** | `.claude/skills/review/SKILL.md` |
 | **Arguments** | Tous optionnels (voir ci-dessous) |
 
 #### Arguments
@@ -1288,7 +1299,7 @@ Ces limites sont **configurables**. Vous pouvez modifier `.claude/commands/plan-
 
 #### Detection automatique du scope
 
-La commande analyse automatiquement les fichiers changes :
+Le skill analyse automatiquement les fichiers changes :
 
 ```
 backend/**/*.go → Backend review
@@ -1518,7 +1529,7 @@ Ce framework est **independant du langage et du framework**. Les patterns sont u
 
 ### Principe de base
 
-Les agents et commandes fonctionnent avec **n'importe quelle stack** car ils :
+Les agents et skills fonctionnent avec **n'importe quelle stack** car ils :
 
 1. **Explorent** votre code existant (pas de presuppose sur la structure)
 2. **Cherchent des patterns** dans votre projet
@@ -1649,7 +1660,7 @@ Cela evite la duplication et maintient la coherence.
 
 ### Explore → Plan → Validate → Implement → Verify
 
-Chaque commande suit ce cycle :
+Chaque skill suit ce cycle :
 
 ```
 EXPLORE    → Collecter le contexte (agents en parallele)
@@ -1739,14 +1750,14 @@ Verifiez que :
 2. Les fichiers `.md` ont le bon format YAML frontmatter
 3. Vous etes dans le bon repertoire projet
 
-### Les commandes ne fonctionnent pas
+### Les skills ne fonctionnent pas
 
 ```bash
 # Verifier la structure
-ls -la .claude/commands/
+ls -la .claude/skills/
 
-# Les fichiers doivent avoir l'extension .md
-# et le bon format YAML frontmatter
+# Chaque skill doit avoir un fichier SKILL.md
+# avec le bon format YAML frontmatter
 ```
 
 ### Context7 ne trouve pas ma librairie
@@ -1788,7 +1799,7 @@ Les contributions sont les bienvenues !
 ### Idees de contributions
 
 - Nouveaux agents specialises
-- Nouvelles commandes de workflow
+- Nouveaux skills de workflow
 - Support d'autres bases de donnees
 - Traductions
 - Ameliorations de documentation

